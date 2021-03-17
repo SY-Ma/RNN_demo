@@ -89,7 +89,9 @@ Hidden_t+1|(batch_size, num_layers, d_hidden)|
 计算损失时的目标数据维度|(batch_size * seq_len)|
 
 RNN会返回两个值，一个是每次RNNcell循环得到的hidden组成的列表，一个是最后一次RNNcell循环得到的hidden。维度分别为(batch_size, seq_len, d_hidden)  (num_layers, batch_size, d_hidden)<br>
-较难理解的是计算损失时的维度情况，网络输出的每个时间步的预测值维度为(batch_size, seq_len, number_of_classes)，目标向量的维度为(batch_size, seq_len)，而交叉熵损失函数要求预测向量维度为(N, C)，目标向量维度为(N)，其中C为number_of_classes，所以对于目标向量，我们对其进行降维，变为(batch_size * seq_len)，相应的预测向量为维度应该满足损失函数的要求，变为(batch_size * seq_len, number_of_classes)，相当于将每个样本的时间序列展开来
+较难理解的是计算损失时的维度情况，网络输出的每个时间步的预测值维度为(batch_size, seq_len, number_of_classes)，目标向量的维度为(batch_size, seq_len)，而交叉熵损失函数要求预测向量维度为(N, C)，目标向量维度为(N)，其中C为number_of_classes，所以对于目标向量，我们对其进行降维，变为(batch_size * seq_len)，相应的预测向量为维度应该满足损失函数的要求，变为(batch_size * seq_len, number_of_classes)，相当于将每个样本的时间序列展开来，结合下图更容易理解。
+
+![Image text](https://github.com/SY-Ma/RNN_demo/blob/main/image/RNN%E8%AE%A1%E7%AE%97%E6%8D%9F%E5%A4%B1%E5%90%91%E9%87%8F%E7%BB%B4%E5%BA%A6.png)<br>
 
 ## 练习结果
 每个模型基本上都能在5个Epoch左右变成'ohlol',改变目标字符串也能达到同样的速度。
