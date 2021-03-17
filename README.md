@@ -86,3 +86,9 @@ Hidden_t+1|(batch_size, num_layers, d_hidden)|
 
 RNN会返回两个值，一个是每次RNNcell循环得到的hidden组成的列表，一个是最后一次RNNcell循环得到的hidden。维度分别为(batch_size, seq_len, d_hidden)  (num_layers, batch_size, d_hidden)
 
+## 参考
+基础知识视频：https://www.bilibili.com/video/BV1Y7411d7Ys?p=12
+
+
+## 本人学识浅薄，代码和文字若有不当之处欢迎批评与指正！
+## 联系方式：masiyuan007@qq.com
