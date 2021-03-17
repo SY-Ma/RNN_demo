@@ -23,6 +23,7 @@
     tensor([0., 3., 2., 0., 2.])
 ```
 
-## 模型即维度描述
+## 模型及维度描述
 ### RNN_basic_code
 ![Image text](https://github.com/SY-Ma/RNN_demo/blob/main/image/RNNcell%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
+RNNcell有两个输入，一个是上一层的hidden输出，一个是时间t的输入，两个数据进入RNNcell之后其实就是经过了两个线性层改变了维度，然后加在一起经过tanh激活函数,就得到了t时刻的hidden输出。RNN_basic_code不使用Pytorch提供的torch.nn.RNNCell,而是自己构建线性层和激活函数，对数据进行处理。
