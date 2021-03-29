@@ -77,21 +77,33 @@ Hidden_t+1|(batch_size, d_hidden)|
 其实RNNCell和RNN_basic_code的维度含义是相同的，RNN——basic_code的输入变量维度其实也可以是(batch_size, d_input)，我们只不过是在实现的时候结合数据仅有一条的情况简化了以下，其在计算损失之前进行了unsqueeze(dim=0)的操作，其实就是加了个batch_size=1的维度。
 
 ### RNN
-使用torch.nn.RNN直接创建RNN模型，与RNNCell不同的是，RNN加了一个维度。我们不在需要for循环取每个时间步的向量，而是直接将batch_size个样本(这里batch_size为1)全部输入。同样的，labels为batch_size个样本的所有时间步向量。<br>
+使用torch.nn.RNN直接创建RNN模型，与RNNCell不同的是，RNN加了一个维度。我们不在需要for循环取每个时间步的向量，而是直接将batch_size个样本(这里batch_size为1)全部输入。同样的，labels为batch_size个样本的所有时间步向量。创建时设置batch_first=True, bidirectional=False<br>
 各阶段数据维度如下：<br>
 
 数据|shape|
 ----|-----|
 X_t|(batch_size, seq_len, d_input)|
-Hidden_t|(batch_size, num_layers, d_hidden)|
-Hidden_t+1|(batch_size, num_layers, d_hidden)|
+Hidden_t|(num_layers, batch_size, d_hidden)|
+Hidden_t+1|(num_layers, batch_size, d_hidden)|
 计算损失时的预测数据维度|(batch_size * seq_len, number_of_classes)|
 计算损失时的目标数据维度|(batch_size * seq_len)|
 
-RNN会返回两个值，一个是每次RNNcell循环得到的hidden组成的列表，一个是最后一次RNNcell循环得到的hidden。维度分别为(batch_size, seq_len, d_hidden)  (num_layers, batch_size, d_hidden)<br>
+RNN会返回两个值，一个是每次RNNcell循环得到的hidden组成的高维Tensor，一个是最后一次RNNcell循环得到的hidden。维度分别为(batch_size, seq_len, d_hidden)  (num_layers, batch_size, d_hidden)<br>
 较难理解的是计算损失时的维度情况，网络输出的每个时间步的预测值维度为(batch_size, seq_len, number_of_classes)，目标向量的维度为(batch_size, seq_len)，而交叉熵损失函数要求预测向量维度为(N, C)，目标向量维度为(N)，其中C为number_of_classes，所以对于目标向量，我们对其进行降维，变为(batch_size * seq_len)，相应的预测向量为维度应该满足损失函数的要求，变为(batch_size * seq_len, number_of_classes)，相当于将每个样本的时间序列展开来，结合下图更容易理解。
 
 ![Image text](https://github.com/SY-Ma/RNN_demo/blob/main/image/RNN%E8%AE%A1%E7%AE%97%E6%8D%9F%E5%A4%B1%E5%90%91%E9%87%8F%E7%BB%B4%E5%BA%A6.png)<br>
+
+### LSTM
+维度与RNN一致，LSTM对时间序列较长的数据有更好的效果，在创建对象时设置batch_first=True, bidirectional=True<br>
+各阶段数据维度如下：<br>
+
+数据|shape|
+----|-----|
+X_t|(batch_size, seq_len, d_input)|
+Hidden_t|(num_layers, batch_size, d_hidden * 2)|
+Hidden_t+1|(num_layers, batch_size, d_hidden * 2)|
+计算损失时的预测数据维度|(batch_size * seq_len, number_of_classes)|
+计算损失时的目标数据维度|(batch_size * seq_len)|
 
 ## 练习结果
 每个模型基本上都能在5个Epoch左右变成'ohlol',改变目标字符串也能达到同样的速度。
